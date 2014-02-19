@@ -1,0 +1,6 @@
+---
+chdir: /home/r/Projects/deployer
+socket: /tmp/deployer_production_thin.sock
+environment: production
+daemonize: true
+servers: 2

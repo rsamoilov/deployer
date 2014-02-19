@@ -1,0 +1,33 @@
+#ui
+  #sidebar.box
+    %ul.menu
+      %li= link_to 'API Deploy', show_deploy_api_path
+      %li= link_to 'Staging UI', 'https://intel-staging.xcal.tv'
+
+  #main-wrapper
+    .content-page
+      %h1#ui_title.title UI deploy
+
+      %p
+        Deploy will be performed using capistrano - remote multi-server automation tool.
+        = link_to 'http://www.capistranorb.com', 'http://www.capistranorb.com'
+      %p
+        It supports the scripting and execution of arbitrary tasks, and includes a set of sane-default deployment workflows.
+
+      %blockquote.margin_top.last_commits
+        %h3 Latest commits
+        %p that's what you are going to deploy
+        %ul
+          - @commits.each do |commit|
+            %li
+              %code= commit[:sha]
+              = commit[:message]
+              %code by
+              = commit[:author]
+
+      .keyboard.margin_top
+        .keyboard-row
+          .keyboard-key.redirect{ data: { action: image_path('CHICKEN.jpg') } } ESC
+          .keyboard-key#deploy_ui.deploy_button{ data: { action: @action } } I AM READY - LETS GO
+
+      #loader
