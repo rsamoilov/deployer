@@ -27,7 +27,7 @@ class DeployController < ApplicationController
   private
 
   def ui_last_commits
-    commit_objects = Octokit.commits('UI_REPO') rescue []
+    commit_objects = Octokit.commits(Deployer.config.ui_repo) rescue []
     commits = commit_objects.first(3).map do |c|
       { author: c.commit.author.name, date: c.commit.author.date,
         message: c.commit.message, sha: c.sha.first(8) }

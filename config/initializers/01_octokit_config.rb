@@ -6,5 +6,5 @@ end
 
 Octokit.middleware = stack
 Octokit.configure do |c|
-  c.access_token = 'GITHUB_ACCESS_TOKEN'
+  c.access_token = Deployer.config.github_access_token
 end

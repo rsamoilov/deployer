@@ -1,0 +1,16 @@
+deploy_commands:
+  api:
+    cd /home/r/Projects/oiv-api &&
+    . $HOME/.rvm/environments/ruby-2.0.0-p353 &&
+    export BUNDLE_GEMFILE=/home/r/Projects/oiv-api/Gemfile
+    && export BUNDLE_BIN_PATH=$HOME/.rvm/gems/ruby-2.0.0-p353/bin/bundle
+    && rvm 2.0.0-p353 exec cap deploy staging -l STDOUT
+  ui:
+    cd /home/r/Projects/oiv-ui &&
+    . $HOME/.rvm/environments/ruby-1.9.3-p385 &&
+    export BUNDLE_GEMFILE=/home/r/Projects/oiv-ui/Gemfile
+    && export BUNDLE_BIN_PATH=$HOME/.rvm/gems/ruby-1.9.3-p385/bin/bundle
+    && rvm 1.9.3-p385 exec cap deploy staging -l STDOUT
+    
+github_access_token: github_access_token
+ui_repo: ui_repo
