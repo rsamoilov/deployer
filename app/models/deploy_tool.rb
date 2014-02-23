@@ -1,5 +1,6 @@
 class DeployTool
   class << self
+    # asynchronously perform deploy
     # service is either ui or api
     def deploy(service)
       deploy_lock = DeployLock.instance(service)
@@ -10,7 +11,7 @@ class DeployTool
         deploy_object = Deploy.create!(service: service)
         Thread.new do
           deploy_lock.with_lock do
-            send "run_#{service}_commands"
+            run_deploy_commands_for service, deploy_object.log
             deploy_object.finish!
           end
           ActiveRecord::Base.connection_pool.release_connection
@@ -22,14 +23,11 @@ class DeployTool
 
     private
 
-    def run_api_commands
-      `notify-send Deploy "API deploy, please"`
-      `gnome-terminal --disable-factory --working-directory=/home/r/Projects/api`
-    end
-
-    def run_ui_commands
-      `notify-send Deploy "UI deploy, please"`
-      `gnome-terminal --disable-factory --working-directory=/home/r/Projects/ui`
+    def run_deploy_commands_for(service, log)
+      command = Deployer.config.deploy_commands.send(service)
+      IO.popen(command).each do |line|
+        log.write line
+      end
     end
   end # class << self
 end
