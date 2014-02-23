@@ -9,15 +9,17 @@ $ ->
     $('.keyboard').hide()
     $('.last_commits').hide()
     $('p').hide()
+    showDeployLogs()
 
-    spinner = createSpinner({ color: '#fff' })
+    spinner = null#createSpinner({ color: '#fff' })
     performDeploy spinner
 
   $('#deploy_api').click (event) ->
     event.preventDefault()
 
     $(@).hide()
-    spinner = createSpinner()
+    showDeployLogs()
+    spinner = null#createSpinner()
     performDeploy spinner
 
   createSpinner = (additional_options = {}) ->
@@ -42,9 +44,16 @@ $ ->
         deploy_uid = data.deploy_uid
 
         intervalId = setInterval (->
-          response = checkDeploy(deploy_uid)
-          if response.responseJSON.state == 'deployed'
-            destroySpinner spinner
+          response = checkDeploy(deploy_uid).responseJSON
+
+          logs_window = $('#deploy_logs')
+          logs_window.html ''
+          $.each response.logs, (i, value) ->
+            logs_window.append "#{value}<br>"
+            logs_window.scrollTop logs_window[0].scrollHeight
+
+          if response.state == 'deployed'
+            # destroySpinner spinner
             $('.title').html 'Deployed successfully!'
             clearInterval intervalId
         ), 2000
@@ -75,3 +84,11 @@ $ ->
     top: 'auto'
     left: 'auto'
   window.spinnerOptions = spinnerOptions
+
+  showDeployLogs = ->
+    deploy_logs_el = $('#deploy_logs')
+    deploy_logs_el.show()
+    deploy_logs_el.animate
+      width: '60%'
+      height: '300px'
+    , 1500

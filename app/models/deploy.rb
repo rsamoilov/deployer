@@ -18,6 +18,10 @@ class Deploy < ActiveRecord::Base
     update_attribute :state, 'deployed'
   end
 
+  def log
+    @log ||= DeployLog.new(self.uid)
+  end
+
   private
 
   def generate_uid

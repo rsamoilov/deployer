@@ -17,7 +17,11 @@ class DeployController < ApplicationController
   end
 
   def check_deploy
-    render json: { state: Deploy.find_by(uid: params[:deploy_uid]).state }
+    deploy_object = Deploy.find_by(uid: params[:deploy_uid])
+    state = deploy_object.state
+    logs = deploy_object.log.read#(params[:logs_position])
+
+    render json: { state: state, logs: logs }
   end
 
   private
