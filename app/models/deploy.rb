@@ -16,10 +16,16 @@ class Deploy < ActiveRecord::Base
 
   def finish!
     update_attribute :state, 'deployed'
+    self.notify_update 'deploy_finish'
   end
 
   def log
-    @log ||= DeployLog.new(self.uid)
+    @log ||= DeployLog.new(self)
+  end
+
+  def notify_update(event, *args)
+    channel = "deploy_log.#{self.uid}"
+    WebsocketRails[channel].trigger event, *args
   end
 
   private

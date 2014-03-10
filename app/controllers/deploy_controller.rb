@@ -16,14 +16,6 @@ class DeployController < ApplicationController
     do_deploy 'ui'
   end
 
-  def check_deploy
-    deploy_object = Deploy.find_by(uid: params[:deploy_uid])
-    state = deploy_object.state
-    logs = deploy_object.log.read#(params[:logs_position])
-
-    render json: { state: state, logs: logs }
-  end
-
   private
 
   def ui_last_commits

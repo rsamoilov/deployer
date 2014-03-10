@@ -43,28 +43,26 @@ $ ->
         alert('Deploy is already running! Be patient...') if data.status == 'already_running'
         deploy_uid = data.deploy_uid
 
-        intervalId = setInterval (->
-          response = checkDeploy(deploy_uid).responseJSON
+        dispatcher = new WebSocketRails("#{location.host}/websocket")
+        logs_window = $('#deploy_logs')
+        dispatcher.bind 'current_logs', (logs) ->
+          parseLogs logs_window, logs
+  
+        channel = dispatcher.subscribe("deploy_log.#{deploy_uid}")
+        channel.bind 'logs_update', (logs) ->
+          parseLogs logs_window, logs
 
-          logs_window = $('#deploy_logs')
-          logs_window.html ''
-          $.each response.logs, (i, value) ->
-            logs_window.append "#{value}<br>"
-            logs_window.scrollTop logs_window[0].scrollHeight
+        dispatcher.trigger 'deploy_log.new_client', { deploy_uid: deploy_uid }
 
-          if response.state == 'deployed'
-            # destroySpinner spinner
-            $('.title').html 'Deployed successfully!'
-            clearInterval intervalId
-        ), 2000
+        channel.bind 'deploy_finish', ->
+          # destroySpinner spinner
+          $('.title').html 'Deployed successfully!'
 
-  checkDeploy = (deploy_uid) ->
-    $.ajax
-      url: "deploy/check_deploy/#{deploy_uid}"
-      type: "GET"
-      async: false
+  parseLogs = (logs_window, logs) ->
+    $.each logs, (i, value) ->
+      logs_window.append "#{value}<br>"
+      logs_window.scrollTop logs_window[0].scrollHeight
 
-  window.checkDeploy = checkDeploy
 
   spinnerOptions = ->
     lines: 13
