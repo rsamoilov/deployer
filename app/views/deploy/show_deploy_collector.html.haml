@@ -1,0 +1,19 @@
+#cogs
+  %img#cogOne{src: image_path('big_cog.png')}
+  %img#cogTwo{src: image_path('little_cog.png')}
+
+.deploy_collector_little.redirect{ data: { action: show_deploy_ui_path } } UI
+.deploy_collector_little.redirect{ data: { action: show_deploy_api_path } } API
+
+#content
+  %h1#collector_title.title Deploy Collector
+  #deploy_collector.deploy_button{ data: { action: @action } }
+    Do it!
+
+  #loader
+  #deploy_logs
+
+#gear_1
+  %img{src: image_path('gear_1.gif')}
+#gear_4
+  %img{src: image_path('gear_4.gif')}

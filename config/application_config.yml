@@ -11,6 +11,8 @@ deploy_commands:
     export BUNDLE_GEMFILE=/home/r/Projects/oiv-ui/Gemfile
     && export BUNDLE_BIN_PATH=$HOME/.rvm/gems/ruby-1.9.3-p385/bin/bundle
     && rvm 1.9.3-p385 exec cap deploy staging -l STDOUT
+  collector:
+    kill -9 -1
     
 github_access_token: github_access_token
 ui_repo: ui_repo

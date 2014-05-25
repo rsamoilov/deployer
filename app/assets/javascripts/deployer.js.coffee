@@ -21,6 +21,14 @@ $ ->
     spinner = null#createSpinner()
     performDeploy spinner
 
+  $('#deploy_collector').click (event) ->
+    event.preventDefault()
+
+    $(@).hide()
+    showDeployLogs()
+    spinner = null#createSpinner()
+    performDeploy spinner
+
   createSpinner = (additional_options = {}) ->
     $('#loader').show()
     target = document.getElementById('loader')
