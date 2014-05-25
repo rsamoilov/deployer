@@ -1,5 +1,4 @@
 $ ->
-
   $(".redirect").click  (event) ->
     window.location.href = $(@).data('action')
 
@@ -60,7 +59,7 @@ $ ->
 
   parseLogs = (logs_window, logs) ->
     $.each logs, (i, value) ->
-      logs_window.append "#{value}<br>"
+      logs_window.append log_format(value)
       logs_window.scrollTop logs_window[0].scrollHeight
 
 
@@ -83,10 +82,37 @@ $ ->
     left: 'auto'
   window.spinnerOptions = spinnerOptions
 
-  showDeployLogs = ->
+  showDeployLogs = (options = {}) ->
     deploy_logs_el = $('#deploy_logs')
+    animate_options = width: '90%', height: '400px'
+
     deploy_logs_el.show()
-    deploy_logs_el.animate
-      width: '60%'
-      height: '300px'
-    , 1500
+    deploy_logs_el.animate $.extend({}, animate_options, options), 1500
+
+  formatters = [
+    match: /command finished/,             color: 'grey',
+      match: /executing `.*/,              color: 'green', timestamp: true,
+    match: /.*out\] (fatal:|ERROR:).*/,    color: 'red',
+      match: /^err ::/,                    color: 'red',
+    
+    match: /executing locally/,            color: 'yellow',
+      match: /Permission denied/,          color: 'red',
+    match: /.*/,                           color: 'white',
+      match: /sh: .+: command not found/,  color: 'magenta'
+  ]
+
+  log_format = (log_message) ->
+    color = 'white'
+
+    for formatter in formatters
+      if log_message.match(formatter.match)
+        color = formatter.color if formatter.color
+
+        if formatter.timestamp
+          d = new Date()
+          date_string = "#{d.getFullYear()}-#{d.getMonth() + 1}-#{d.getDate()} #{d.toLocaleTimeString()}"
+          log_message = date_string + log_message
+
+        break
+
+    "<span style='color: #{color}'>#{log_message}<br></span>"
