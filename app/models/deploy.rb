@@ -31,7 +31,7 @@ class Deploy < ActiveRecord::Base
   private
 
   def generate_uid
-    self.uid ||= SecureRandom.hex
+    self.uid ||= SecureRandom.uuid
   end
 
   def set_default_state
