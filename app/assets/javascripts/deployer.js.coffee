@@ -101,12 +101,13 @@ $ ->
     match: /command finished/,             color: 'grey',
       match: /executing `.*/,              color: 'green', timestamp: true,
     match: /.*out\] (fatal:|ERROR:).*/,    color: 'red',
-      match: /^err ::/,                    color: 'red',
+      match: /\*+ \[*err ::/,              color: 'red',
     
     match: /executing locally/,            color: 'yellow',
-      match: /Permission denied/,          color: 'red',
-    match: /.*/,                           color: 'white',
-      match: /sh: .+: command not found/,  color: 'magenta'
+      match: /\*+ executing/,              color: 'yellow',
+    match: /Permission denied/,            color: 'red',
+      match: /sh: .+: command not found/,  color: 'magenta',
+    match: /.*/,                           color: 'white'
   ]
 
   log_format = (log_message) ->
